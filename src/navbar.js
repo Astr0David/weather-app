@@ -51,7 +51,7 @@ export default function createNavbar() {
     'button-container--celcius-button',
     'active-unit-button',
   );
-  celciusButton.textContent = '°C,mm,m/s';
+  celciusButton.textContent = '°C,mm,kph';
   celciusButton.addEventListener('click', (e) => {
     if (e.target.classList.contains('active')) return;
     setActiveUnitButton(celciusButton);
