@@ -1,0 +1,16 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": "airbnb-base",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "curly": "off",
+    "no-confusing-arrow": "off",
+    "no-tabs": ["error", { "allowIndentationTabs": false }]
+  }
+}
