@@ -1,0 +1,158 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: 0;
+  font-family: 'Open Sans', sans-serif;
+}
+
+body {
+  height: 100vh;
+  width: 100%;
+}
+
+.container {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(to bottom, #184e77, #d9ed92);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  flex-wrap: wrap;
+}
+
+.nav__left-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.left-nav__image-container {
+  width: 100px;
+  height: 100px;
+}
+
+.image-container__weather-logo {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.left-nav__search-bar-container {
+  display: flex;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 0.6rem;
+  border-radius: 4px;
+  gap: 0.5rem;
+}
+
+.search-bar-container__search-bar {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  transition: 0.5s;
+  width: 0px;
+  font-size: 1.15rem;
+}
+
+.left-nav__search-bar-container:hover .search-bar-container__search-bar {
+  width: 300px;
+}
+
+.search-bar-container__search-bar::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.search-bar-container__search-icon {
+  margin-left: -0.45rem;
+  align-items: center;
+  display: flex;
+}
+
+.left-nav__search-bar-container:hover .search-bar-container__search-icon {
+  margin: 0rem;
+}
+
+#searchbaricon {
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition: 0.1s ease;
+}
+
+#searchbaricon:hover {
+  transform: scale(1.15);
+}
+
+#searchbaricon:active {
+  transform: scale(1);
+}
+
+.nav__right-nav {
+  display: flex;
+  align-items: center;
+}
+
+.button-container__unit-button {
+  border: none;
+  outline: none;
+  font-size: 1.25rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  font-weight: 300;
+  transition: 0.1s ease;
+}
+
+.button-container__unit-button:hover {
+  opacity: 50%;
+}
+
+.button-container--celcius-button {
+  background-color: rgba(52, 160, 164, 0.5);
+  border-radius: 4px 0px 0px 4px;
+}
+
+.button-container--fahrenheit-button {
+  background-color: rgba(82, 182, 154, 0.5);
+  border-radius: 0px 4px 4px 0px;
+}
+
+.button-container__unit-button.active-unit-button {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 400;
+}
+
+@media screen and (max-width: 725px) {
+  .nav {
+    padding-top: 1rem;
+  }
+
+  .left-nav__image-container {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 610px) {
+  .nav {
+    gap: 1rem;
+  }
+
+  .nav__left-nav {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .nav__right-nav {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .left-nav__search-bar-container:hover .search-bar-container__search-bar {
+    width: 100%;
+  }
+}
