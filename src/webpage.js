@@ -12,7 +12,7 @@ function setActiveUnitButton(button) {
   button.classList.add('active-unit-button');
 }
 
-function createNavbar() {
+export default function createNavbar() {
   const weatherLogo = new Image();
   weatherLogo.src = weatherIcon;
   weatherLogo.classList.add('image-container__weather-logo');
@@ -83,9 +83,4 @@ function createNavbar() {
   nav.appendChild(rightNavContainer);
 
   return nav;
-}
-
-export default function initialiseWebpage() {
-  const container = document.querySelector('.container');
-  container.appendChild(createNavbar());
 }

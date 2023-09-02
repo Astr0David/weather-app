@@ -1,4 +1,5 @@
 import './style.css';
-import initialiseWebpage from './webpage';
+import createNavbar from './webpage';
 
-initialiseWebpage();
+const container = document.querySelector('.container');
+container.appendChild(createNavbar());
