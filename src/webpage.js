@@ -1,6 +1,6 @@
 import weatherIcon from './assets/weather-icon.svg';
 
-function setActiveButton(button) {
+function setActiveUnitButton(button) {
   const buttons = document.querySelectorAll('.button-container__unit-button');
 
   buttons.forEach((eachbutton) => {
@@ -54,7 +54,7 @@ function createNavbar() {
   celciusButton.textContent = '°C,mm,m/s';
   celciusButton.addEventListener('click', (e) => {
     if (e.target.classList.contains('active')) return;
-    setActiveButton(celciusButton);
+    setActiveUnitButton(celciusButton);
   });
 
   const fahrenheitButton = document.createElement('button');
@@ -65,7 +65,7 @@ function createNavbar() {
   fahrenheitButton.textContent = '°F,in,mph';
   fahrenheitButton.addEventListener('click', (e) => {
     if (e.target.classList.contains('active')) return;
-    setActiveButton(fahrenheitButton);
+    setActiveUnitButton(fahrenheitButton);
   });
 
   const buttonContainer = document.createElement('div');
