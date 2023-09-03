@@ -1,9 +1,15 @@
-function toggleAlertText() {
+function addAlertText() {
   const errorMessage = document.getElementById('errormessage');
 
   if (errorMessage.style.display === 'none') {
     errorMessage.style.display = 'block';
-  } else if (errorMessage.style.display === 'block') {
+  }
+}
+
+function removeAlertText() {
+  const errorMessage = document.getElementById('errormessage');
+
+  if (errorMessage.style.display === 'block') {
     errorMessage.style.display = 'none';
   }
 }
@@ -16,21 +22,29 @@ export default async function fetchWeatherData() {
     const preliminaryResponse = await fetch(preliminaryUrl);
     const preliminaryData = await preliminaryResponse.json();
 
-    if (preliminaryData.error.code === 1006) {
-      toggleAlertText();
+    if (preliminaryData.error && preliminaryData.error.code === 1006) {
+      addAlertText();
       return null;
     }
 
-    toggleAlertText();
+    removeAlertText();
 
     localStorage.setItem('location', prelimLocation);
     const setLocation = localStorage.getItem('location');
 
     const apiUrl = `https://api.weatherapi.com/v1/forecast.json?key=c59fecabfe9e45e9913114407230209&q=${setLocation}&days=7&aqi=no&alerts=no`;
 
-    const response = await fetch(apiUrl);
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
     const data = await response.json();
-    return data;
+
+    return { data };
   } catch (error) {
     console.error('Error fetching data from the API:', error);
     throw error;
@@ -43,9 +57,17 @@ export async function fetchWeatherDataOnLoad() {
 
     const apiUrl = `https://api.weatherapi.com/v1/forecast.json?key=c59fecabfe9e45e9913114407230209&q=${setLocation}&days=7&aqi=no&alerts=no`;
 
-    const response = await fetch(apiUrl);
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
     const data = await response.json();
-    return data;
+
+    return { data };
   } catch (error) {
     console.error('Error fetching data from the API:', error);
     throw error;

@@ -1,16 +1,24 @@
 import fetchWeatherData, { fetchWeatherDataOnLoad } from './weatherapi-calls';
+import formatDateToHumanReadable from './date-adjust';
 
 function createLocationElement(locationData) {
   const locationElement = document.createElement('p');
   locationElement.classList.add('title-container__location');
-  locationElement.textContent = `${locationData.name}, ${locationData.region}, ${locationData.country}`;
+  const name = locationData.name || '';
+  const region = locationData.region || '';
+  const country = locationData.country || '';
+
+  const locationText = [name, region, country].filter(Boolean).join(', ');
+
+  locationElement.textContent = locationText;
+
   return locationElement;
 }
 
-function createDateTimeElement(currentData) {
+function createDateTimeElement(locationData) {
   const dateTimeElement = document.createElement('p');
   dateTimeElement.classList.add('title-container__date-time');
-  dateTimeElement.textContent = `${currentData.last_updated}`;
+  dateTimeElement.textContent = `${formatDateToHumanReadable(locationData.localtime)}`;
   return dateTimeElement;
 }
 
@@ -25,17 +33,17 @@ function createWeatherSectionContainer() {
 export default async function createWeatherSection() {
   createWeatherSectionContainer();
   try {
-    const weatherData = await fetchWeatherData();
+    const result = await fetchWeatherData();
 
-    if (!weatherData) {
+    if (!result) {
       return;
     }
+    const weatherData = result.data;
 
     const locationData = weatherData.location;
-    const currentData = weatherData.current;
 
     const locationElement = createLocationElement(locationData);
-    const dateTimeElement = createDateTimeElement(currentData);
+    const dateTimeElement = createDateTimeElement(locationData);
 
     const titleContainer = document.createElement('div');
     titleContainer.classList.add('weather-section__title-container');
@@ -64,17 +72,17 @@ export default async function createWeatherSection() {
 export async function createWeatherSectionOnLoad() {
   createWeatherSectionContainer();
   try {
-    const weatherData = await fetchWeatherDataOnLoad();
+    const result = await fetchWeatherDataOnLoad();
 
-    if (!weatherData) {
+    if (!result) {
       return;
     }
+    const weatherData = result.data;
 
     const locationData = weatherData.location;
-    const currentData = weatherData.current;
 
     const locationElement = createLocationElement(locationData);
-    const dateTimeElement = createDateTimeElement(currentData);
+    const dateTimeElement = createDateTimeElement(locationData);
 
     const titleContainer = document.createElement('div');
     titleContainer.classList.add('weather-section__title-container');
