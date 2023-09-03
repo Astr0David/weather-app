@@ -28,6 +28,14 @@ function createWeatherSectionContainer() {
   const weatherSectionContainer = document.createElement('section');
   weatherSectionContainer.classList.add('weather-section-container');
 
+  const existingWeatherSection = document.querySelector(
+    '.weather-section-container',
+  );
+
+  if (existingWeatherSection) {
+    existingWeatherSection.remove();
+  }
+
   const container = document.querySelector('.container');
   container.appendChild(weatherSectionContainer);
 }
