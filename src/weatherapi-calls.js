@@ -50,26 +50,3 @@ export default async function fetchWeatherData() {
     throw error;
   }
 }
-
-export async function fetchWeatherDataOnLoad() {
-  try {
-    const setLocation = localStorage.getItem('location');
-
-    const apiUrl = `https://api.weatherapi.com/v1/forecast.json?key=c59fecabfe9e45e9913114407230209&q=${setLocation}&days=7&aqi=no&alerts=no`;
-
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-    });
-
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-
-    const data = await response.json();
-
-    return { data };
-  } catch (error) {
-    console.error('Error fetching data from the API:', error);
-    throw error;
-  }
-}

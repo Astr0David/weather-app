@@ -1,4 +1,4 @@
-import fetchWeatherData, { fetchWeatherDataOnLoad } from './weatherapi-calls';
+import fetchWeatherData from './weatherapi-calls';
 import formatDateToHumanReadable from './date-adjust';
 
 function createLocationElement(locationData) {
@@ -18,7 +18,9 @@ function createLocationElement(locationData) {
 function createDateTimeElement(locationData) {
   const dateTimeElement = document.createElement('p');
   dateTimeElement.classList.add('title-container__date-time');
-  dateTimeElement.textContent = `${formatDateToHumanReadable(locationData.localtime)}`;
+  dateTimeElement.textContent = `${formatDateToHumanReadable(
+    locationData.localtime,
+  )}`;
   return dateTimeElement;
 }
 
@@ -34,45 +36,6 @@ export default async function createWeatherSection() {
   createWeatherSectionContainer();
   try {
     const result = await fetchWeatherData();
-
-    if (!result) {
-      return;
-    }
-    const weatherData = result.data;
-
-    const locationData = weatherData.location;
-
-    const locationElement = createLocationElement(locationData);
-    const dateTimeElement = createDateTimeElement(locationData);
-
-    const titleContainer = document.createElement('div');
-    titleContainer.classList.add('weather-section__title-container');
-    titleContainer.appendChild(locationElement);
-    titleContainer.appendChild(dateTimeElement);
-
-    const weatherSection = document.createElement('div');
-    weatherSection.classList.add('weather-section-container__weather-section');
-    weatherSection.appendChild(titleContainer);
-
-    const existingWeatherSection = document.querySelector(
-      '.weather-section-container__weather-section',
-    );
-
-    if (existingWeatherSection) {
-      existingWeatherSection.remove();
-    }
-    document
-      .querySelector('.weather-section-container')
-      .appendChild(weatherSection);
-  } catch (error) {
-    console.error('Error creating weather section:', error);
-  }
-}
-
-export async function createWeatherSectionOnLoad() {
-  createWeatherSectionContainer();
-  try {
-    const result = await fetchWeatherDataOnLoad();
 
     if (!result) {
       return;
