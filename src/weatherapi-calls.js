@@ -1,13 +1,10 @@
 function toggleAlertText() {
   const errorMessage = document.getElementById('errormessage');
-  const searchBar = document.getElementById('search-bar');
 
   if (errorMessage.style.display === 'none') {
     errorMessage.style.display = 'block';
-    searchBar.style.width = '335px';
   } else if (errorMessage.style.display === 'block') {
     errorMessage.style.display = 'none';
-    searchBar.style.width = '0px';
   }
 }
 
@@ -19,7 +16,7 @@ export default async function fetchWeatherData() {
     const preliminaryResponse = await fetch(preliminaryUrl);
     const preliminaryData = await preliminaryResponse.json();
 
-    if (preliminaryData.error && preliminaryData.error.code === 1006) {
+    if (preliminaryData.error.code === 1006) {
       toggleAlertText();
       return null;
     }
