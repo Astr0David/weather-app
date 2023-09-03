@@ -1,4 +1,5 @@
 import weatherIcon from './assets/weather-icon.svg';
+import createWeatherSection from './today-weather';
 
 function setActiveUnitButton(button) {
   const buttons = document.querySelectorAll('.button-container__unit-button');
@@ -10,6 +11,18 @@ function setActiveUnitButton(button) {
   });
 
   button.classList.add('active-unit-button');
+}
+
+function handleSearch() {
+  const inputElement = document.getElementById('search-bar');
+
+  const searchTerm = inputElement.value.trim();
+
+  if (searchTerm !== '') {
+    localStorage.setItem('prelimlocation', searchTerm);
+    createWeatherSection();
+    inputElement.value = '';
+  }
 }
 
 export default function createNavbar() {
@@ -26,19 +39,43 @@ export default function createNavbar() {
   iconElement.setAttribute('id', 'searchbaricon');
 
   const searchIcon = document.createElement('div');
-  searchIcon.classList.add('search-bar-container__search-icon');
+  searchIcon.classList.add('search-container__search-icon');
   searchIcon.appendChild(iconElement);
+  searchIcon.addEventListener('click', handleSearch);
 
   const inputElement = document.createElement('input');
   inputElement.setAttribute('type', 'text');
-  inputElement.classList.add('search-bar-container__search-bar');
+  inputElement.classList.add('search-container__search-bar');
   inputElement.setAttribute('id', 'search-bar');
   inputElement.setAttribute('placeholder', 'Search location...');
+  inputElement.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  });
+
+  const searchContainer = document.createElement('div');
+  searchContainer.classList.add('search-bar-container__search-container');
+  searchContainer.appendChild(inputElement);
+  searchContainer.appendChild(inputElement);
+  searchContainer.appendChild(searchIcon);
+
+  const errorMessage = document.createElement('p');
+  errorMessage.classList.add('search-bar-container__error-message');
+  // eslint-disable-next-line operator-linebreak
+  errorMessage.textContent =
+    'Location is not valid. Please enter a valid location.';
+  errorMessage.setAttribute('id', 'errormessage');
+  errorMessage.style.display = 'none';
+
+  const errorContainer = document.createElement('div');
+  errorContainer.classList.add('search-bar-container__error-container');
+  errorContainer.appendChild(errorMessage);
 
   const searchBarContainer = document.createElement('div');
   searchBarContainer.classList.add('left-nav__search-bar-container');
-  searchBarContainer.appendChild(inputElement);
-  searchBarContainer.appendChild(searchIcon);
+  searchBarContainer.appendChild(searchContainer);
+  searchBarContainer.appendChild(errorContainer);
 
   const leftNavContainer = document.createElement('div');
   leftNavContainer.classList.add('nav__left-nav');
@@ -82,5 +119,6 @@ export default function createNavbar() {
   nav.appendChild(leftNavContainer);
   nav.appendChild(rightNavContainer);
 
-  return nav;
+  const container = document.querySelector('.container');
+  container.appendChild(nav);
 }

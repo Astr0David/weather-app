@@ -1,5 +1,13 @@
 import './style.css';
 import createNavbar from './navbar';
+import { createWeatherSectionOnLoad } from './today-weather';
 
-const container = document.querySelector('.container');
-container.appendChild(createNavbar());
+document.addEventListener('DOMContentLoaded', () => {
+  createNavbar();
+  if (localStorage.getItem('prelimlocation') === null) {
+    localStorage.setItem('prelimlocation', 'london');
+  } else if (localStorage.getItem('location') === null) {
+    localStorage.setItem('location', 'london');
+  }
+  createWeatherSectionOnLoad();
+});

@@ -11,6 +11,8 @@
   "rules": {
     "curly": "off",
     "no-confusing-arrow": "off",
-    "no-tabs": ["error", { "allowIndentationTabs": false }]
+    "no-tabs": ["error", { "allowIndentationTabs": false }],
+    "no-console": "off",
+    "no-alert": "off"
   }
 }
