@@ -88,10 +88,12 @@ export default function createNavbar() {
     'button-container--celcius-button',
     'active-unit-button',
   );
+  celciusButton.setAttribute('id', 'celcius');
   celciusButton.textContent = '°C,mm,kph';
   celciusButton.addEventListener('click', (e) => {
     if (e.target.classList.contains('active')) return;
     setActiveUnitButton(celciusButton);
+    createWeatherSection();
   });
 
   const fahrenheitButton = document.createElement('button');
@@ -99,10 +101,12 @@ export default function createNavbar() {
     'button-container__unit-button',
     'button-container--fahrenheit-button',
   );
+  fahrenheitButton.setAttribute('id', 'fahrenheit');
   fahrenheitButton.textContent = '°F,in,mph';
   fahrenheitButton.addEventListener('click', (e) => {
     if (e.target.classList.contains('active')) return;
     setActiveUnitButton(fahrenheitButton);
+    createWeatherSection();
   });
 
   const buttonContainer = document.createElement('div');
