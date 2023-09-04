@@ -7,8 +7,8 @@
   font-family: 'Open Sans', sans-serif;
 }
 
-
-html, body {
+html,
+body {
   height: 100%;
   min-height: 100%;
   margin: 0;
@@ -186,7 +186,7 @@ html, body {
   gap: 5rem;
   display: flex;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
 }
 
 .today-weather-section__main-pill {
@@ -289,6 +289,89 @@ html, body {
   font-weight: 300;
 }
 
+.weather-section__stats-weather-section {
+  display: grid;
+  max-width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 4rem;
+}
+
+.stats-weather-section__stat-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 1rem;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+.stat-card__title {
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+  text-align: center;
+}
+
+.stat-card__stat {
+  font-size: 2rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: -1rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.stat-card__icon {
+  font-size: 5rem;
+  color: white;
+}
+
+.weather-section__upcoming-weather-section {
+  margin-bottom: 3rem;
+}
+
+.upcoming-weather-section__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1.5rem;
+}
+
+.upcoming-weather-section__table th,
+.upcoming-weather-section__table td {
+  padding: 0.5rem 2.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+
+}
+
+.upcoming-weather-section__table td {
+  color: rgba(255, 255, 255, 1);
+  text-align: center;
+}
+
+.upcoming-weather-section__table tbody > tr:last-child > td{
+  border-bottom: none;
+}
+
+.upcoming-weather-section__table th {
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  font-weight: bold;
+}
+
+.upcoming-weather-section__table td:nth-child(2) {
+  text-align: center;
+}
+
+.upcoming-weather-section__table .icon-cell {
+  font-size: 3rem;
+  color: white;
+}
+
 @media screen and (max-width: 725px) {
   .left-nav__image-container {
     display: none;
@@ -332,7 +415,7 @@ html, body {
   }
 }
 
-@media screen and (max-width: 549px){
+@media screen and (max-width: 549px) {
   html {
     height: auto;
   }
@@ -340,8 +423,18 @@ html, body {
   body {
     height: 100%;
   }
-  
+
   .container {
     min-height: 100vh;
+  }
+}
+
+@media screen and (max-width: 462px) {
+  .weather-section__stats-weather-section {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  .today-weather-section__main-pill {
+    padding: 0.5rem;
+    max-width: 100%;
   }
 }

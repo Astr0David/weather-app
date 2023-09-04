@@ -98,6 +98,123 @@ function createCard(
   return card;
 }
 
+function createStatCard(stat, title, icon, angle = '') {
+  const card = document.createElement('div');
+  card.classList.add('stats-weather-section__stat-card');
+
+  const statCardTitle = createTextElement('stat-card__title', title);
+
+  const statCardStat = createTextElement('stat-card__stat', stat);
+
+  const iconElement = createIconElement(icon);
+  iconElement.classList.add('stat-card__icon');
+
+  if (angle !== '') {
+    iconElement.style.transform = `rotate(${angle}deg)`;
+  }
+
+  card.appendChild(statCardTitle);
+  card.appendChild(statCardStat);
+  card.appendChild(iconElement);
+
+  return card;
+}
+
+function getWeekDay(dateString) {
+  const date = new Date(dateString);
+
+  const dayOfWeekNumber = date.getDay();
+
+  const daysOfWeek = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ];
+  const dayOfWeekName = daysOfWeek[dayOfWeekNumber];
+
+  return dayOfWeekName;
+}
+
+function createUpcomingTable(weatherData, isFahrenheit) {
+  const upcomingData = [];
+
+  for (let i = 1; i <= 7; i++) {
+    const forecast = weatherData.forecast.forecastday[i];
+    const dayData = {
+      day: getWeekDay(forecast.date),
+      description: forecast.day.condition.text,
+      maxTemperature: isFahrenheit
+        ? `${forecast.day.maxtemp_f}°F`
+        : `${forecast.day.maxtemp_c}°C`,
+      minTemperature: isFahrenheit
+        ? `${forecast.day.mintemp_f}°F`
+        : `${forecast.day.mintemp_c}°C`,
+      chanceOfRain: `${forecast.day.daily_chance_of_rain}%`,
+      humidity: `${forecast.day.avghumidity}%`,
+    };
+
+    upcomingData.push(dayData);
+  }
+
+  const table = document.createElement('table');
+  table.classList.add('upcoming-weather-section__table');
+
+  const tableHeader = table.createTHead();
+  const headerRow = tableHeader.insertRow(0);
+  const headers = [
+    'Day',
+    '',
+    'Max Temp',
+    'Min Temp',
+    'Chance of Rain',
+    'Humidity',
+  ];
+
+  for (let i = 0; i < headers.length; i++) {
+    const th = document.createElement('th');
+    th.textContent = headers[i];
+    headerRow.appendChild(th);
+  }
+
+  const tableBody = document.createElement('tbody');
+
+  upcomingData.forEach((data, i) => {
+    const row = tableBody.insertRow();
+    const rowData = [
+      data.day,
+      createIconElement(weatherIcons[data.description]),
+      data.maxTemperature,
+      data.minTemperature,
+      data.chanceOfRain,
+      data.humidity,
+    ];
+
+    rowData.forEach((item, index) => {
+      const cell = row.insertCell();
+      if (item instanceof Element) {
+        cell.appendChild(item);
+        if (index === 1) {
+          cell.classList.add('icon-cell');
+        }
+      } else {
+        cell.textContent = item;
+      }
+    });
+
+    if (i === upcomingData.length - 1) {
+      row.classList.add('last-row');
+    }
+  });
+
+  table.appendChild(tableBody);
+
+  return table;
+}
+
 function getNext24HoursData(weatherData) {
   const currentLastUpdated = new Date(weatherData.current.last_updated);
 
@@ -141,6 +258,7 @@ function createWeatherSection(weatherData, isfahrenheit, isCelcius) {
     'title-container__location',
     `${weatherData.location.name}, ${weatherData.location.region}, ${weatherData.location.country}`,
   );
+
   const dateTimeElement = createTextElement(
     'title-container__date-time',
     formatDateToHumanReadable(weatherData.location.localtime),
@@ -155,6 +273,7 @@ function createWeatherSection(weatherData, isfahrenheit, isCelcius) {
     'main-pill-top__today-description',
     currentWeather.condition.text,
   );
+
   const todayFeelsLike = createTextElement(
     'main-pill-top__today-feels-like',
     `Feels like ${
@@ -186,6 +305,7 @@ function createWeatherSection(weatherData, isfahrenheit, isCelcius) {
     'main-pill-bot--today-lowhigh-text',
     `High: ${isfahrenheit ? forecast.maxtemp_f : forecast.maxtemp_c}°`,
   );
+
   const todayLowText = createTextElement(
     'main-pill-bot--today-lowhigh-text',
     `Low: ${isfahrenheit ? forecast.mintemp_f : forecast.mintemp_c}°`,
@@ -232,10 +352,84 @@ function createWeatherSection(weatherData, isfahrenheit, isCelcius) {
   todayWeatherSection.appendChild(mainPill);
   todayWeatherSection.appendChild(hourlyPill);
 
+  const sunriseStat = createStatCard(
+    weatherData.forecast.forecastday[0].astro.sunrise,
+    'Sunrise',
+    'fa-solid fa-cloud-sun',
+  );
+
+  const sunsetStat = createStatCard(
+    weatherData.forecast.forecastday[0].astro.sunset,
+    'Sunset',
+    'fa-solid fa-cloud-moon',
+  );
+
+  const windStat = createStatCard(
+    `${
+      isfahrenheit
+        ? `${currentWeather.wind_mph} mph`
+        : `${currentWeather.wind_kph} kph`
+    }`,
+    'Wind',
+    'fa-solid fa-wind',
+  );
+
+  const windDirectionStat = createStatCard(
+    currentWeather.wind_dir,
+    'Wind Direction',
+    'fa-solid fa-up-long',
+    currentWeather.wind_degree,
+  );
+
+  const humidityStat = createStatCard(
+    `${currentWeather.humidity}%`,
+    'Humidity',
+    'fa-solid fa-droplet',
+  );
+
+  const uvStat = createStatCard(currentWeather.uv, 'UV', 'fa-regular fa-sun');
+
+  const chanceOfRainStat = createStatCard(
+    `${weatherData.forecast.forecastday[0].day.daily_chance_of_rain}%`,
+    'Chance of Rain',
+    'fa-solid fa-cloud-showers-water',
+  );
+
+  const precipitationStat = createStatCard(
+    `${
+      isfahrenheit
+        ? `${currentWeather.precip_in} inches`
+        : `${currentWeather.precip_mm} mm`
+    }`,
+    'Precipitation',
+    'fa-solid fa-water',
+  );
+
+  const statsWeatherSection = document.createElement('div');
+  statsWeatherSection.classList.add('weather-section__stats-weather-section');
+  statsWeatherSection.appendChild(sunriseStat);
+  statsWeatherSection.appendChild(sunsetStat);
+  statsWeatherSection.appendChild(windStat);
+  statsWeatherSection.appendChild(windDirectionStat);
+  statsWeatherSection.appendChild(humidityStat);
+  statsWeatherSection.appendChild(uvStat);
+  statsWeatherSection.appendChild(chanceOfRainStat);
+  statsWeatherSection.appendChild(precipitationStat);
+
+  const upcomingWeatherSection = document.createElement('div');
+  upcomingWeatherSection.classList.add(
+    'weather-section__upcoming-weather-section',
+  );
+  upcomingWeatherSection.appendChild(
+    createUpcomingTable(weatherData, isfahrenheit),
+  );
+
   const weatherSection = document.createElement('div');
   weatherSection.classList.add('weather-section-container__weather-section');
   weatherSection.appendChild(titleContainer);
   weatherSection.appendChild(todayWeatherSection);
+  weatherSection.appendChild(statsWeatherSection);
+  weatherSection.appendChild(upcomingWeatherSection);
 
   const existingWeatherSection = document.querySelector(
     '.weather-section-container__weather-section',
