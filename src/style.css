@@ -342,7 +342,6 @@ body {
 .upcoming-weather-section__table td {
   padding: 0.5rem 2.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-
 }
 
 .upcoming-weather-section__table td {
@@ -436,5 +435,52 @@ body {
   .today-weather-section__main-pill {
     padding: 0.5rem;
     max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 948px) {
+  .upcoming-weather-section__table th,
+.upcoming-weather-section__table td {
+  padding: 0.5rem 1.5rem;
+}
+}
+
+@media screen and (max-width: 745px) {
+  .upcoming-weather-section__table {
+    font-size: 1rem;
+  }
+}
+
+@media screen and (max-width: 653px) {
+  .upcoming-weather-section__table td:last-child {
+    display: none;
+  }
+
+  .upcoming-weather-section__table th:last-child {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 533px) {
+  .upcoming-weather-section__table td:nth-child(5) {
+    display: none;
+  }
+
+  .upcoming-weather-section__table th:nth-child(5) {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 436px) {
+  .upcoming-weather-section__table td:nth-child(2) {
+    display: none;
+  }
+
+  .upcoming-weather-section__table th:nth-child(2) {
+    display: none;
+  }
+
+  .upcoming-weather-section__table td {
+    padding: 1.5rem 0rem;
   }
 }
