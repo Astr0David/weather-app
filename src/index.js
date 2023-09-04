@@ -1,7 +1,7 @@
 /* eslint-disable operator-linebreak */
 import './style.css';
 import createNavbar from './navbar';
-import createWeatherSection from './today-weather';
+import initialiseWeatherSection from './today-weather';
 
 document.addEventListener('DOMContentLoaded', () => {
   createNavbar();
@@ -14,5 +14,5 @@ document.addEventListener('DOMContentLoaded', () => {
   ) {
     localStorage.setItem('prelimlocation', localStorage.getItem('location'));
   }
-  createWeatherSection();
+  initialiseWeatherSection();
 });

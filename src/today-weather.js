@@ -2,43 +2,17 @@
 import fetchWeatherData from './weatherapi-calls';
 import formatDateToHumanReadable from './date-adjust';
 
-function createLocationElement(locationData) {
-  const locationElement = document.createElement('p');
-  locationElement.classList.add('title-container__location');
-  const name = locationData.name || '';
-  const region = locationData.region || '';
-  const country = locationData.country || '';
-
-  const locationText = [name, region, country].filter(Boolean).join(', ');
-
-  locationElement.textContent = locationText;
-
-  return locationElement;
+function createTextElement(className, textContent) {
+  const element = document.createElement('p');
+  element.classList.add(className);
+  element.textContent = textContent;
+  return element;
 }
 
-function createDateTimeElement(locationData) {
-  const dateTimeElement = document.createElement('p');
-  dateTimeElement.classList.add('title-container__date-time');
-  dateTimeElement.textContent = `${formatDateToHumanReadable(
-    locationData.localtime,
-  )}`;
-  return dateTimeElement;
-}
-
-function createWeatherSectionContainer() {
-  const weatherSectionContainer = document.createElement('section');
-  weatherSectionContainer.classList.add('weather-section-container');
-
-  const existingWeatherSection = document.querySelector(
-    '.weather-section-container',
-  );
-
-  if (existingWeatherSection) {
-    existingWeatherSection.remove();
-  }
-
-  const container = document.querySelector('.container');
-  container.appendChild(weatherSectionContainer);
+function createIconElement(className) {
+  const element = document.createElement('i');
+  element.setAttribute('class', className);
+  return element;
 }
 
 const weatherIcons = {
@@ -93,6 +67,37 @@ const weatherIcons = {
   'Moderate or heavy snow with thunder': 'fa-solid fa-cloud-bolt',
 };
 
+function createCard(
+  timeWithoutDate,
+  weatherText,
+  temperature,
+  isfahrenheit,
+  isCelcius,
+) {
+  const card = document.createElement('div');
+  card.classList.add('hourly-pill__card');
+
+  const timeElement = createTextElement('card__time', timeWithoutDate);
+  const iconElement = createIconElement(weatherIcons[weatherText]);
+  iconElement.classList.add('card__icon');
+  const temperatureElement = createTextElement(
+    'card__temperature',
+    `${temperature}°`,
+  );
+
+  if (isfahrenheit) {
+    temperatureElement.textContent = `${temperature}°F`;
+  } else if (isCelcius) {
+    temperatureElement.textContent = `${temperature}°C`;
+  }
+
+  card.appendChild(timeElement);
+  card.appendChild(iconElement);
+  card.appendChild(temperatureElement);
+
+  return card;
+}
+
 function getNext24HoursData(weatherData) {
   const currentLastUpdated = new Date(weatherData.current.last_updated);
 
@@ -128,7 +133,140 @@ function getNext24HoursData(weatherData) {
   return next24Hours;
 }
 
-export default async function createWeatherSection() {
+function createWeatherSection(weatherData, isfahrenheit, isCelcius) {
+  const currentWeather = weatherData.current;
+  const forecast = weatherData.forecast.forecastday[0].day;
+
+  const locationElement = createTextElement(
+    'title-container__location',
+    `${weatherData.location.name}, ${weatherData.location.region}, ${weatherData.location.country}`,
+  );
+  const dateTimeElement = createTextElement(
+    'title-container__date-time',
+    formatDateToHumanReadable(weatherData.location.localtime),
+  );
+
+  const titleContainer = document.createElement('div');
+  titleContainer.classList.add('weather-section__title-container');
+  titleContainer.appendChild(locationElement);
+  titleContainer.appendChild(dateTimeElement);
+
+  const todayDescription = createTextElement(
+    'main-pill-top__today-description',
+    currentWeather.condition.text,
+  );
+  const todayFeelsLike = createTextElement(
+    'main-pill-top__today-feels-like',
+    `Feels like ${
+      isfahrenheit ? currentWeather.feelslike_f : currentWeather.feelslike_c
+    }°`,
+  );
+
+  const mainPillTop = document.createElement('div');
+  mainPillTop.classList.add('main-pill__main-pill-top');
+  mainPillTop.appendChild(todayDescription);
+  mainPillTop.appendChild(todayFeelsLike);
+
+  const weatherPic = createIconElement(
+    weatherIcons[currentWeather.condition.text],
+  );
+  weatherPic.classList.add('main-pill-mid__weather-pic');
+
+  const currentTempText = createTextElement(
+    'main-pill-mid__current-temp-text',
+    `${isfahrenheit ? currentWeather.temp_f : currentWeather.temp_c}°`,
+  );
+
+  const mainPillMid = document.createElement('div');
+  mainPillMid.classList.add('main-pill__main-pill-mid');
+  mainPillMid.appendChild(weatherPic);
+  mainPillMid.appendChild(currentTempText);
+
+  const todayHighText = createTextElement(
+    'main-pill-bot--today-lowhigh-text',
+    `High: ${isfahrenheit ? forecast.maxtemp_f : forecast.maxtemp_c}°`,
+  );
+  const todayLowText = createTextElement(
+    'main-pill-bot--today-lowhigh-text',
+    `Low: ${isfahrenheit ? forecast.mintemp_f : forecast.mintemp_c}°`,
+  );
+
+  const mainPillBot = document.createElement('div');
+  mainPillBot.classList.add('main-pill__main-pill-bot');
+  mainPillBot.appendChild(todayHighText);
+  mainPillBot.appendChild(todayLowText);
+
+  const mainPill = document.createElement('div');
+  mainPill.classList.add('today-weather-section__main-pill');
+  mainPill.appendChild(mainPillTop);
+  mainPill.appendChild(mainPillMid);
+  mainPill.appendChild(mainPillBot);
+
+  const hourlyPill = document.createElement('div');
+  hourlyPill.classList.add('today-weather-section__hourly-pill');
+
+  const hourlyData = getNext24HoursData(weatherData);
+
+  hourlyData.forEach((hourData, index) => {
+    const timeWithoutDate = hourData.time.split(' ')[1];
+    const temperature = isfahrenheit ? hourData.temp_f : hourData.temp_c;
+    const weatherText = hourData.condition.text;
+
+    const card = createCard(
+      timeWithoutDate,
+      weatherText,
+      temperature,
+      isfahrenheit,
+      isCelcius,
+    );
+
+    if (index === 0) {
+      card.querySelector('.card__time').style.fontWeight = '600';
+    }
+
+    hourlyPill.appendChild(card);
+  });
+
+  const todayWeatherSection = document.createElement('div');
+  todayWeatherSection.classList.add('weather-section__today-weather-section');
+  todayWeatherSection.appendChild(mainPill);
+  todayWeatherSection.appendChild(hourlyPill);
+
+  const weatherSection = document.createElement('div');
+  weatherSection.classList.add('weather-section-container__weather-section');
+  weatherSection.appendChild(titleContainer);
+  weatherSection.appendChild(todayWeatherSection);
+
+  const existingWeatherSection = document.querySelector(
+    '.weather-section-container__weather-section',
+  );
+
+  if (existingWeatherSection) {
+    existingWeatherSection.remove();
+  }
+
+  document
+    .querySelector('.weather-section-container')
+    .appendChild(weatherSection);
+}
+
+function createWeatherSectionContainer() {
+  const weatherSectionContainer = document.createElement('section');
+  weatherSectionContainer.classList.add('weather-section-container');
+
+  const existingWeatherSection = document.querySelector(
+    '.weather-section-container',
+  );
+
+  if (existingWeatherSection) {
+    existingWeatherSection.remove();
+  }
+
+  const container = document.querySelector('.container');
+  container.appendChild(weatherSectionContainer);
+}
+
+export default async function initialiseWeatherSection() {
   createWeatherSectionContainer();
   let isfahrenheit = false;
   let isCelcius = false;
@@ -150,152 +288,7 @@ export default async function createWeatherSection() {
 
     const weatherData = result.data;
 
-    const locationData = weatherData.location;
-
-    const locationElement = createLocationElement(locationData);
-    const dateTimeElement = createDateTimeElement(locationData);
-
-    const titleContainer = document.createElement('div');
-    titleContainer.classList.add('weather-section__title-container');
-    titleContainer.appendChild(locationElement);
-    titleContainer.appendChild(dateTimeElement);
-
-    const todayDescription = document.createElement('p');
-    todayDescription.classList.add('main-pill-top__today-description');
-    todayDescription.textContent = `${weatherData.current.condition.text}`;
-
-    const todayFeelsLike = document.createElement('p');
-    todayFeelsLike.classList.add('main-pill-top__today-feels-like');
-    let feelsliketext = '';
-    if (isfahrenheit) {
-      feelsliketext = `Feels like ${weatherData.current.feelslike_f}°F`;
-    } else if (isCelcius) {
-      feelsliketext = `Feels like ${weatherData.current.feelslike_c}°C`;
-    }
-    todayFeelsLike.textContent = feelsliketext;
-
-    const mainPillTop = document.createElement('div');
-    mainPillTop.classList.add('main-pill__main-pill-top');
-    mainPillTop.appendChild(todayDescription);
-    mainPillTop.appendChild(todayFeelsLike);
-
-    const weatherPic = document.createElement('i');
-    weatherPic.setAttribute(
-      'class',
-      weatherIcons[weatherData.current.condition.text],
-    );
-    weatherPic.classList.add('main-pill-mid__weather-pic');
-
-    const currentTempText = document.createElement('p');
-    currentTempText.classList.add('main-pill-mid__current-temp-text');
-    let nowtemptext = '';
-    if (isfahrenheit) {
-      nowtemptext = `${weatherData.current.temp_f}°`;
-    } else if (isCelcius) {
-      nowtemptext = `${weatherData.current.temp_c}°`;
-    }
-    currentTempText.textContent = nowtemptext;
-
-    const mainPillMid = document.createElement('div');
-    mainPillMid.classList.add('main-pill__main-pill-mid');
-    mainPillMid.appendChild(weatherPic);
-    mainPillMid.appendChild(currentTempText);
-
-    const todayHighText = document.createElement('p');
-    todayHighText.classList.add('main-pill-bot--today-lowhigh-text');
-    let hightemptext = '';
-    if (isfahrenheit) {
-      hightemptext = `High: ${weatherData.forecast.forecastday[0].day.maxtemp_f}°F`;
-    } else if (isCelcius) {
-      hightemptext = `High: ${weatherData.forecast.forecastday[0].day.maxtemp_c}°C`;
-    }
-    todayHighText.textContent = hightemptext;
-
-    const todayLowText = document.createElement('p');
-    todayLowText.classList.add('main-pill-bot--today-lowhigh-text');
-    let lowtemptext = '';
-    if (isfahrenheit) {
-      lowtemptext = `Low: ${weatherData.forecast.forecastday[0].day.mintemp_f}°F`;
-    } else if (isCelcius) {
-      lowtemptext = `Low: ${weatherData.forecast.forecastday[0].day.mintemp_c}°C`;
-    }
-    todayLowText.textContent = lowtemptext;
-
-    const mainPillBot = document.createElement('div');
-    mainPillBot.classList.add('main-pill__main-pill-bot');
-    mainPillBot.appendChild(todayHighText);
-    mainPillBot.appendChild(todayLowText);
-
-    const mainPill = document.createElement('div');
-    mainPill.classList.add('today-weather-section__main-pill');
-    mainPill.appendChild(mainPillTop);
-    mainPill.appendChild(mainPillMid);
-    mainPill.appendChild(mainPillBot);
-
-    const hourlyPill = document.createElement('div');
-    hourlyPill.classList.add('today-weather-section__hourly-pill');
-
-    const hourlyData = getNext24HoursData(weatherData);
-    console.log(hourlyData);
-    let firstbold = true;
-
-    for (let i = 0; i < hourlyData.length; i++) {
-      const hourData = hourlyData[i];
-      const timeWithoutDate = hourData.time.split(' ')[1];
-      const temperatureCelsius = hourData.temp_c;
-      const temperatureFarenheit = hourData.temp_f;
-      const weatherText = hourData.condition.text;
-
-      const card = document.createElement('div');
-      card.classList.add('hourly-pill__card');
-
-      const timeElement = document.createElement('div');
-      timeElement.classList.add('card__time');
-      timeElement.textContent = timeWithoutDate;
-      if (firstbold) {
-        timeElement.style.fontWeight = '600';
-        firstbold = false;
-      }
-
-      const iconElement = document.createElement('i');
-      iconElement.setAttribute('class', weatherIcons[weatherText]);
-      iconElement.classList.add('card__icon');
-
-      const temperatureElement = document.createElement('div');
-      temperatureElement.classList.add('card__temperature');
-      if (isfahrenheit) {
-        temperatureElement.textContent = `${temperatureFarenheit}°`;
-      } else if (isCelcius) {
-        temperatureElement.textContent = `${temperatureCelsius}°`;
-      }
-
-      card.appendChild(timeElement);
-      card.appendChild(iconElement);
-      card.appendChild(temperatureElement);
-
-      hourlyPill.appendChild(card);
-    }
-
-    const todayWeatherSection = document.createElement('div');
-    todayWeatherSection.classList.add('weather-section__today-weather-section');
-    todayWeatherSection.appendChild(mainPill);
-    todayWeatherSection.appendChild(hourlyPill);
-
-    const weatherSection = document.createElement('div');
-    weatherSection.classList.add('weather-section-container__weather-section');
-    weatherSection.appendChild(titleContainer);
-    weatherSection.appendChild(todayWeatherSection);
-
-    const existingWeatherSection = document.querySelector(
-      '.weather-section-container__weather-section',
-    );
-
-    if (existingWeatherSection) {
-      existingWeatherSection.remove();
-    }
-    document
-      .querySelector('.weather-section-container')
-      .appendChild(weatherSection);
+    createWeatherSection(weatherData, isfahrenheit, isCelcius);
   } catch (error) {
     console.error('Error creating weather section:', error);
   }

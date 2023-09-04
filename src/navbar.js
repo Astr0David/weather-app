@@ -1,5 +1,5 @@
 import weatherIcon from './assets/weather-icon.svg';
-import createWeatherSection from './today-weather';
+import initialiseWeatherSection from './today-weather';
 
 function setActiveUnitButton(button) {
   const buttons = document.querySelectorAll('.button-container__unit-button');
@@ -20,7 +20,7 @@ function handleSearch() {
 
   if (searchTerm !== '') {
     localStorage.setItem('prelimlocation', searchTerm);
-    createWeatherSection();
+    initialiseWeatherSection();
     inputElement.value = '';
   }
 }
@@ -93,7 +93,7 @@ export default function createNavbar() {
   celciusButton.addEventListener('click', (e) => {
     if (e.target.classList.contains('active')) return;
     setActiveUnitButton(celciusButton);
-    createWeatherSection();
+    initialiseWeatherSection();
   });
 
   const fahrenheitButton = document.createElement('button');
@@ -106,7 +106,7 @@ export default function createNavbar() {
   fahrenheitButton.addEventListener('click', (e) => {
     if (e.target.classList.contains('active')) return;
     setActiveUnitButton(fahrenheitButton);
-    createWeatherSection();
+    initialiseWeatherSection();
   });
 
   const buttonContainer = document.createElement('div');

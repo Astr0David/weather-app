@@ -7,13 +7,16 @@
   font-family: 'Open Sans', sans-serif;
 }
 
-body {
-  height: 100vh;
-  width: 100%;
+
+html, body {
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .container {
-  height: 100%;
+  min-height: 100%;
   width: 100%;
   background: linear-gradient(to bottom, #184e77, #d9ed92);
 }
@@ -183,6 +186,7 @@ body {
   gap: 5rem;
   display: flex;
   align-items: center;
+  margin-bottom: 2rem;
 }
 
 .today-weather-section__main-pill {
@@ -238,23 +242,22 @@ body {
   padding-top: 1rem;
   padding-bottom: 1rem;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
-  min-width: 400px;
   user-select: none;
 }
 
 .today-weather-section__hourly-pill::-webkit-scrollbar {
-  width: 0.5rem; 
+  width: 0.5rem;
 }
 
 .today-weather-section__hourly-pill::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.2);
-  border-radius: 5px; 
+  border-radius: 5px;
   width: 0.5rem;
 }
 
 .today-weather-section__hourly-pill::-webkit-scrollbar-track {
   background-color: transparent;
-  border-radius: 5px; 
+  border-radius: 5px;
 }
 
 .hourly-pill__card {
@@ -315,7 +318,7 @@ body {
   }
 }
 
-@media screen and (max-width: 970px){
+@media screen and (max-width: 970px) {
   .weather-section__today-weather-section {
     width: 100%;
     flex-wrap: wrap;
@@ -324,5 +327,21 @@ body {
     gap: 2rem;
   }
 
+  .today-weather-section__hourly-pill {
+    width: 100%;
+  }
+}
 
+@media screen and (max-width: 549px){
+  html {
+    height: auto;
+  }
+
+  body {
+    height: 100%;
+  }
+  
+  .container {
+    min-height: 100vh;
+  }
 }
