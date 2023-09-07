@@ -256,7 +256,9 @@ function createWeatherSection(weatherData, isfahrenheit, isCelcius) {
 
   const locationElement = createTextElement(
     'title-container__location',
-    `${weatherData.location.name}, ${weatherData.location.region}, ${weatherData.location.country}`,
+    `${weatherData.location.name ? `${weatherData.location.name}, ` : ''}${
+      weatherData.location.region ? `${weatherData.location.region}, ` : ''
+    }${weatherData.location.country ? weatherData.location.country : ''}`,
   );
 
   const dateTimeElement = createTextElement(
