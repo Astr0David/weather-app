@@ -17,7 +17,7 @@ function removeAlertText() {
 export default async function fetchWeatherData() {
   const prelimLocation = localStorage.getItem('prelimlocation');
   try {
-    const preliminaryUrl = `https://api.weatherapi.com/v1/current.json?key=c59fecabfe9e45e9913114407230209&q=${prelimLocation}&days=8&aqi=no&alerts=no`;
+    const preliminaryUrl = `https://api.weatherapi.com/v1/forecast.json?key=c59fecabfe9e45e9913114407230209&q=${prelimLocation}&days=8&aqi=no&alerts=no`;
 
     const preliminaryResponse = await fetch(preliminaryUrl);
     const preliminaryData = await preliminaryResponse.json();
