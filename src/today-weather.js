@@ -143,7 +143,6 @@ function createUpcomingTable(weatherData, isFahrenheit) {
   const upcomingData = [];
 
   for (let i = 1; i <= 2; i++) {
-    console.log(i);
     const forecast = weatherData.forecast.forecastday[i];
     const dayData = {
       day: getWeekDay(forecast.date),

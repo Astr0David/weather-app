@@ -34,9 +34,7 @@ export default async function fetchWeatherData() {
 
     const apiUrl = `http://api.weatherapi.com/v1/forecast.json?key=f06208e4f62140dd84052920231309&q=${setLocation}&days=8&aqi=no&alerts=no`;
 
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-    });
+    const response = await fetch(apiUrl);
 
     if (!response.ok) {
       throw new Error('Network response was not ok');
