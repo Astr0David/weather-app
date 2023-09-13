@@ -17,7 +17,7 @@ function removeAlertText() {
 export default async function fetchWeatherData() {
   const prelimLocation = localStorage.getItem('prelimlocation');
   try {
-    const preliminaryUrl = `http://api.weatherapi.com/v1/forecast.json?key=f06208e4f62140dd84052920231309&q=${prelimLocation}&days=8&aqi=no&alerts=no`;
+    const preliminaryUrl = `https://api.weatherapi.com/v1/forecast.json?key=f06208e4f62140dd84052920231309&q=${prelimLocation}&days=8&aqi=no&alerts=no`;
 
     const preliminaryResponse = await fetch(preliminaryUrl);
     const preliminaryData = await preliminaryResponse.json();
@@ -32,7 +32,7 @@ export default async function fetchWeatherData() {
     localStorage.setItem('location', prelimLocation);
     const setLocation = localStorage.getItem('location');
 
-    const apiUrl = `http://api.weatherapi.com/v1/forecast.json?key=f06208e4f62140dd84052920231309&q=${setLocation}&days=8&aqi=no&alerts=no`;
+    const apiUrl = `https://api.weatherapi.com/v1/forecast.json?key=f06208e4f62140dd84052920231309&q=${setLocation}&days=8&aqi=no&alerts=no`;
 
     const response = await fetch(apiUrl);
 
